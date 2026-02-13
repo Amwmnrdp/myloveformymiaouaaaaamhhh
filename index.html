@@ -267,13 +267,17 @@
             position: absolute;
             width: 300px;
             height: 300px;
-            background-image: url('/kiss.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 200px;
             opacity: 1;
             z-index: 99;
             pointer-events: none;
+        }
+
+        .lip-mark-trace::after {
+            content: '💋';
         }
 
         /* Final Scene Heart */
@@ -395,7 +399,7 @@
             </div>
         </div>
 
-        <img id="kiss-icon" src="/kiss.png" alt="Kiss">
+        <div id="kiss-icon" class="kiss-emoji-container"></div>
         <div id="beating-heart" class="beating-heart-emoji">🫀</div>
     </div>
 
@@ -524,6 +528,11 @@
 
         function handleForgiveness() {
             const kiss = document.getElementById('kiss-icon');
+            kiss.style.display = 'flex';
+            kiss.style.justifyContent = 'center';
+            kiss.style.alignItems = 'center';
+            kiss.innerHTML = '💋';
+            kiss.style.fontSize = '250px';
             kiss.classList.add('kiss-active');
             
             setTimeout(() => {
@@ -533,12 +542,11 @@
                 trace.style.top = '50%';
                 trace.style.transform = 'translate(-50%, -50%) scale(4)';
                 document.getElementById('main-container').appendChild(trace);
-                
-                // Kiss mark stays visible
             }, 1000);
 
             setTimeout(() => {
                 kiss.classList.remove('kiss-active');
+                kiss.style.display = 'none';
                 showMsg('msg6');
             }, 2500);
         }
