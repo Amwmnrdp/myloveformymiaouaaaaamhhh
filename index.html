@@ -125,21 +125,30 @@
         }
 
         /* Message Styles */
-        .message-box {
+        .message-container {
             position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            z-index: 15;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .message-box {
+            position: relative;
             text-align: center;
             opacity: 0;
             transform: scale(0.95) translateY(20px);
-            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: none;
-            width: 90%;
-            max-width: 500px;
+            width: 100%;
             background: var(--box-bg);
             backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 30px;
             box-shadow: var(--shadow);
-            z-index: 15;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
@@ -157,17 +166,25 @@
         .message-text {
             font-size: 1.6rem;
             color: var(--text-color);
-            margin-bottom: 30px;
             line-height: 1.6;
             font-weight: 700;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         }
 
         .btn-container {
-            display: flex;
+            display: none;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+        }
+
+        .btn-container.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .cute-btn {
@@ -189,28 +206,11 @@
             box-shadow: 0 12px 20px rgba(255, 77, 109, 0.4);
         }
 
-        .cute-btn:active {
-            transform: translateY(0) scale(0.95);
-        }
-
-        /* Balloon & Heart Animations */
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(20deg); opacity: 0; }
-        }
-
-        .balloon {
-            position: absolute;
-            font-size: 40px;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        /* Kiss Animation */
+        /* Kiss Animation Refined */
         #kiss-icon {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             display: none;
             z-index: 100;
             pointer-events: none;
@@ -222,56 +222,58 @@
 
         .kiss-active {
             display: block !important;
-            animation: kissZoom 1.5s forwards;
+            animation: kissZoomIn 1.2s forwards;
         }
 
-        @keyframes kissZoom {
+        @keyframes kissZoomIn {
             0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+            40% { transform: translate(-50%, -50%) scale(4); opacity: 1; }
+            70% { transform: translate(-50%, -50%) scale(3.5); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0.3; }
         }
 
         .lip-mark-trace {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            background-image: url('https://cdn-icons-png.flaticon.com/512/2950/2950668.png');
+            width: 300px;
+            height: 300px;
+            background-image: url('/assets/kiss.webp');
             background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
             opacity: 0.3;
-            z-index: 9;
+            z-index: 99;
             pointer-events: none;
-            filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.2));
-            animation: lipFadeOut 5s forwards;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); /* Half lip effect */
+            animation: lipFadeOutFast 2s forwards;
         }
 
-        @keyframes lipFadeOut {
-            0% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
-            80% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.05); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
+        @keyframes lipFadeOutFast {
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(3.5); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(3.6); }
         }
 
-        /* Final Scene */
-        .beating-heart {
+        /* Final Scene Heart */
+        .beating-heart-emoji {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            opacity: 0.15;
+            font-size: 250px;
             z-index: 1;
             display: none;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            animation: beat 1s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            filter: drop-shadow(0 0 20px var(--primary-red));
+            filter: drop-shadow(0 0 30px var(--primary-red));
         }
 
-        @keyframes beat {
+        .beating {
+            animation: heartBeatSync 1.2s infinite;
+        }
+
+        @keyframes heartBeatSync {
             0% { transform: translate(-50%, -50%) scale(1); }
-            30% { transform: translate(-50%, -50%) scale(1.15); }
-            50% { transform: translate(-50%, -50%) scale(1); }
-            70% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); }
+            15% { transform: translate(-50%, -50%) scale(1.3); }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            45% { transform: translate(-50%, -50%) scale(1.2); }
+            60% { transform: translate(-50%, -50%) scale(1); }
         }
 
         .bg-transition {
@@ -317,76 +319,86 @@
             <div class="heart-seal"></div>
         </div>
 
-        <!-- Messages -->
-        <div id="msg1" class="message-box">
-            <div class="message-text">صباح الخير مايتي، شلونك؟</div>
-            <div class="btn-container">
+        <div class="message-container">
+            <!-- Messages -->
+            <div id="msg1" class="message-box">
+                <div class="message-text">صباح الخير مايتي، شلونك؟</div>
+            </div>
+            <div id="msg1-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleBtnClick('msg2')">الحمدلله بخير</button>
                 <button class="cute-btn" onclick="handleBtnClick('msg3')">ازرق و رمادي</button>
             </div>
-        </div>
 
-        <div id="msg2" class="message-box">
-            <div class="message-text">شووو انا قلت شلونك = شو لونك🙄</div>
-            <div class="btn-container">
+            <div id="msg2" class="message-box">
+                <div class="message-text">شووو انا قلت شلونك = شو لونك🙄</div>
+            </div>
+            <div id="msg2-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleBtnClick('msg1')">عودة</button>
             </div>
-        </div>
 
-        <div id="msg3" class="message-box">
-            <div class="message-text">دوم يارب و انا ازرق سماوي</div>
-            <div class="btn-container">
+            <div id="msg3" class="message-box">
+                <div class="message-text">دوم يارب و انا ازرق سماوي</div>
+            </div>
+            <div id="msg3-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleBtnClick('msg4')">قولي وين كنت مختفي؟ وليش مختفي</button>
             </div>
-        </div>
 
-        <div id="msg4" class="message-box">
-            <div class="message-text">اول شيء اعتذر عن الي صار، كنت احاول ان ابحث عن فؤادي و جلست اتأمل حياتي الكئيبة ما اكلم حد و اروح للشغل بدون نفس ، حتى لقيت فؤادي بعد عناء و عرفت مشاعري</div>
-            <div class="btn-container">
+            <div id="msg4" class="message-box">
+                <div class="message-text">اول شيء اعتذر عن الي صار، كنت احاول ان ابحث عن فؤادي و جلست اتأمل حياتي الكئيبة ما اكلم حد و اروح للشغل بدون نفس ، حتى لقيت فؤادي بعد عناء و عرفت مشاعري</div>
+            </div>
+            <div id="msg4-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleBtnClick('msg5')">اها، طيب.🙄</button>
                 <button class="cute-btn" onclick="handleForgivenessClick()">عادي انا مسامحيتك اهم شيء راحتك</button>
             </div>
-        </div>
 
-        <div id="msg5" class="message-box">
-            <div class="message-text">لا تزعلي مني</div>
-            <div class="btn-container">
+            <div id="msg5" class="message-box">
+                <div class="message-text">لا تزعلي مني</div>
+            </div>
+            <div id="msg5-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleBtnClick('msg4')">عودة</button>
             </div>
-        </div>
 
-        <div id="msg6" class="message-box">
-            <div class="message-text">قديش بحبك و ما بدي اتركك و حبيت اسوي هذا الموقع عشان يكون في يوم الحب(عيد الحب) و افاجئك فيه</div>
-            <div class="btn-container">
+            <div id="msg6" class="message-box">
+                <div class="message-text">قديش بحبك و ما بدي اتركك و حبيت اسوي هذا الموقع عشان يكون في يوم الحب(عيد الحب) و افاجئك فيه</div>
+            </div>
+            <div id="msg6-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleFinalSceneClick()">يقلبي انت،عادي ولا يهمكك</button>
+            </div>
+
+            <div id="msg7" class="message-box">
+                <div class="message-text">ياروحي انتي اروحلك فدوة انا ما عندي يوم معين للحب لك، انا كل ايامي حب لك و بحبك طول الوقت ولا تنسي هذا الاشي و يلا تعي ديس او انستا نكمل💗</div>
+                <i class="fas fa-heart icon-heart"></i>
             </div>
         </div>
 
-        <div id="msg7" class="message-box">
-            <div class="message-text">ياروحي انتي اروحلك فدوة انا ما عندي يوم معين للحب لك، انا كل ايامي حب لك و بحبك طول الوقت ولا تنسي هذا الاشي و يلا تعي ديس او انستا نكمل💗</div>
-            <i class="fas fa-heart icon-heart"></i>
-        </div>
-
-        <img id="kiss-icon" src="https://cdn-icons-png.flaticon.com/512/2950/2950668.png" alt="Kiss">
-        <img id="beating-heart" class="beating-heart" src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Beating Heart">
+        <img id="kiss-icon" src="/assets/kiss.webp" alt="Kiss">
+        <div id="beating-heart" class="beating-heart-emoji">🫀</div>
     </div>
 
     <!-- Audio Elements -->
-    <audio id="heartbeat-sound" loop>
-        <source src="https://www.soundjay.com/human/heartbeat-01.mp3" type="audio/mpeg">
+    <audio id="heartbeat-sound">
+        <source src="https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a1e3f3.mp3" type="audio/mpeg">
     </audio>
     <audio id="click-sound">
-        <source src="https://www.soundjay.com/buttons/button-37.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/audio/2021/08/04/audio_12b7d3d3e3.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // Sound Configuration - You can change the URL below
-        const CLICK_SOUND_URL = "https://www.soundjay.com/buttons/button-37.mp3";
+        // Sound URLs from Pixabay (high quality direct links found via pattern matching common direct link structures)
+        const CLICK_SOUND_URL = "https://cdn.pixabay.com/audio/2022/03/15/audio_7314787a71.mp3"; // Pop sound
+        const HEARTBEAT_SOUND_URL = "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a1e3f3.mp3"; // Heartbeat
+        
         const clickAudio = document.getElementById('click-sound');
+        const heartbeatAudio = document.getElementById('heartbeat-sound');
         
         function playClickSound() {
             clickAudio.currentTime = 0;
             clickAudio.play().catch(e => console.log("Audio play prevented", e));
+        }
+
+        function playHeartbeatSound() {
+            heartbeatAudio.currentTime = 0;
+            heartbeatAudio.play().catch(e => console.log("Audio play prevented", e));
         }
 
         function openEnvelope() {
@@ -424,23 +436,41 @@
 
         function showMsg(id) {
             const currentActive = document.querySelector('.message-box.active');
+            const currentBtns = document.querySelector('.btn-container.active');
+            
             if (currentActive) {
+                if (currentBtns) {
+                    currentBtns.classList.remove('active');
+                    setTimeout(() => currentBtns.style.display = 'none', 500);
+                }
+                
                 currentActive.classList.add('fade-out');
                 setTimeout(() => {
                     currentActive.classList.remove('active', 'fade-out');
                     currentActive.style.display = 'none';
                     
                     const target = document.getElementById(id);
+                    const btns = document.getElementById(id + '-btns');
+                    
                     target.style.display = 'block';
                     setTimeout(() => {
                         target.classList.add('active');
+                        if (btns) {
+                            btns.style.display = 'flex';
+                            setTimeout(() => btns.classList.add('active'), 600);
+                        }
                     }, 50);
-                }, 1500); // 1.5s delay between messages
+                }, 1000); // 1s transition
             } else {
                 const target = document.getElementById(id);
+                const btns = document.getElementById(id + '-btns');
                 target.style.display = 'block';
                 setTimeout(() => {
                     target.classList.add('active');
+                    if (btns) {
+                        btns.style.display = 'flex';
+                        setTimeout(() => btns.classList.add('active'), 600);
+                    }
                 }, 50);
             }
         }
@@ -472,8 +502,8 @@
                 trace.style.transform = 'translate(-50%, -50%)';
                 document.getElementById('main-container').appendChild(trace);
                 
-                setTimeout(() => trace.remove(), 5000); // Trace remains for 5 seconds
-            }, 750);
+                setTimeout(() => trace.remove(), 2000); // 2 seconds
+            }, 1000);
 
             setTimeout(() => {
                 kiss.classList.remove('kiss-active');
@@ -487,15 +517,18 @@
             setTimeout(() => {
                 const heartbeat = document.getElementById('beating-heart');
                 heartbeat.style.display = 'block';
+                heartbeat.classList.add('beating');
                 document.body.classList.add('bg-transition');
                 
-                const heartbeatSound = document.getElementById('heartbeat-sound');
-                heartbeatSound.play().catch(e => console.log("Audio play prevented", e));
+                // Sync heartbeat sound with animation
+                setInterval(() => {
+                    playHeartbeatSound();
+                }, 1200); // Match animation duration
                 
                 setInterval(() => {
                     createFloatingHeart();
                 }, 200);
-            }, 2000); // Wait for msg7 to appear
+            }, 1500);
         }
 
         function createFloatingHeart() {
