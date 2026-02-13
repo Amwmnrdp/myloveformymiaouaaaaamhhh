@@ -312,10 +312,12 @@
             flex-wrap: wrap;
             opacity: 0;
             width: 100%;
+            z-index: 20;
         }
 
         .btn-container.active {
             display: flex;
+            opacity: 1;
         }
 
         #msg1-btns .cute-btn:nth-child(1) {
@@ -666,9 +668,12 @@
                 const msg1 = document.getElementById('msg1');
                 msg1.classList.add('fixed-top');
                 
-                // Show buttons after msg1 is settled at top
+                // SHOW BUTTONS - Debugged logic
                 setTimeout(() => {
-                    document.getElementById('msg1-btns').classList.add('active');
+                    const msg1Btns = document.getElementById('msg1-btns');
+                    msg1Btns.style.display = 'flex';
+                    msg1Btns.classList.add('active');
+                    console.log("Buttons triggered");
                 }, 1200);
             }, 3000);
         }
@@ -700,6 +705,7 @@
             const currentMsgBox = document.querySelector('.message-box.active');
             const currentBtns = document.querySelector('.btn-container.active');
             
+            // Don't hide msg1 as it's the fixed header
             if (currentMsgBox && currentMsgBox.id !== 'msg1') {
                 currentMsgBox.classList.remove('active');
                 currentMsgBox.classList.add('fade-out');
@@ -711,15 +717,21 @@
             
             if (currentBtns) {
                 currentBtns.classList.remove('active');
+                setTimeout(() => {
+                    currentBtns.style.display = 'none';
+                }, 600);
             }
             
             const nextBox = document.getElementById(msgId);
             const nextBtns = document.getElementById(msgId + '-btns');
             
             setTimeout(() => {
-                nextBox.style.display = 'block';
-                nextBox.classList.add('active');
-                if (nextBtns && msgId !== 'msg1') {
+                if (nextBox) {
+                    nextBox.style.display = 'block';
+                    nextBox.classList.add('active');
+                }
+                if (nextBtns) {
+                    nextBtns.style.display = 'flex';
                     nextBtns.classList.add('active');
                 }
             }, 650);
