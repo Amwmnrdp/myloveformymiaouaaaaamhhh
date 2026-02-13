@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاجأة حب</title>
+    <title>مفاجأة حب </title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,8 +14,9 @@
             --text-color: #590d22;
             --box-bg: rgba(255, 255, 255, 0.95);
             --shadow: 0 15px 35px rgba(255, 77, 109, 0.25);
-            --envelope-color: #f08080;
-            --envelope-flap: #f4978e;
+            --envelope-main: #f8b5b5;
+            --envelope-flap: #f4a4a4;
+            --envelope-shadow: rgba(244, 164, 164, 0.3);
         }
 
         * {
@@ -30,10 +31,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--white);
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe8ec 100%);
             font-family: 'Amiri', serif;
             overflow: hidden;
-            transition: background-color 0.8s ease-in-out;
+            transition: background 0.8s ease-in-out;
         }
 
         #main-container {
@@ -43,39 +44,56 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 1;
         }
 
         /* ============================================
-           ENVELOPE STYLES
+           ELEGANT ENVELOPE WITH ROMANTIC COLORS
            ============================================ */
         .envelope-wrapper {
             position: relative;
             cursor: pointer;
-            transition: transform 0.3s;
-            z-index: 20;
+            transition: transform 0.3s ease;
+            z-index: 100;
         }
 
         .envelope-wrapper:hover:not(.open) {
             transform: scale(1.05);
         }
 
-        .envelope {
-            position: relative;
+        /* الطبقة الخلفية - Romantic pink with inner shadow */
+        .envelope-back {
+            position: absolute;
             width: 300px;
             height: 200px;
-            background: var(--envelope-color);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            background: var(--envelope-main);
+            box-shadow: 
+                0 8px 30px rgba(255, 77, 109, 0.2),
+                inset 0 -30px 50px rgba(0, 0, 0, 0.15);
             border-radius: 0 0 10px 10px;
             z-index: 1;
-            overflow: visible;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        /* Envelope flap (top triangle) */
-        .envelope::before {
+        /* الطبقة الأمامية */
+        .envelope-front {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /* Front flap */
+        .envelope-front::before {
             content: '';
             position: absolute;
-            z-index: 3;
+            z-index: 1001;
             border-top: 100px solid var(--envelope-flap);
             border-right: 150px solid transparent;
             border-left: 150px solid transparent;
@@ -83,22 +101,20 @@
             left: 0;
             transform-origin: top;
             transition: all 0.6s 0.1s ease-in-out;
+            filter: drop-shadow(0 2px 8px var(--envelope-shadow));
         }
 
-        /* Envelope back flaps */
-        .envelope::after {
+        /* Front bottom part */
+        .envelope-front::after {
             content: '';
             position: absolute;
-            z-index: 2;
-            width: 0;
-            height: 0;
-            border-top: 100px solid transparent;
-            border-right: 150px solid #f8ad9d;
-            border-bottom: 100px solid #f8ad9d;
-            border-left: 150px solid #f8ad9d;
+            width: 300px;
+            height: 100px;
+            background: var(--envelope-main);
             bottom: 0;
             left: 0;
             border-radius: 0 0 10px 10px;
+            z-index: 1001;
         }
 
         /* Heart seal */
@@ -109,11 +125,12 @@
             width: 50px;
             height: 50px;
             background: #dc143c;
-            z-index: 4;
+            z-index: 1002;
             transform: translate(-50%, -50%) rotate(-45deg);
             box-shadow: 0 3px 15px rgba(220, 20, 60, 0.5);
             cursor: pointer;
             transition: all 0.6s 0.1s ease-in-out;
+            pointer-events: auto;
         }
 
         .heart-seal::before, .heart-seal::after {
@@ -136,7 +153,7 @@
         }
 
         /* When envelope opens */
-        .envelope-wrapper.open .envelope::before {
+        .envelope-wrapper.open .envelope-front::before {
             transform: rotateX(180deg);
         }
 
@@ -144,27 +161,61 @@
             transform: translate(-50%, -150px) rotate(135deg);
         }
 
-        .envelope-wrapper.open {
-            animation: moveDown 2.5s forwards;
+        .envelope-wrapper.move-down-now {
+            animation: elegantMoveDown 1.5s ease-in-out forwards;
+            z-index: 1;
         }
 
-        @keyframes moveDown {
-            0% { transform: translateY(0); opacity: 1; }
-            40% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(600px); opacity: 0; pointer-events: none; }
+        @keyframes elegantMoveDown {
+            0% { 
+                transform: translateY(0); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(700px); 
+                opacity: 0; 
+                pointer-events: none; 
+            }
         }
 
         /* ============================================
-           HEART-SHAPED BALLOONS
+           CONTENT AREA
+           ============================================ */
+        .envelope-content {
+            position: absolute;
+            width: 280px;
+            height: 180px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 500;
+            overflow: visible;
+            pointer-events: none;
+            transition: all 0.8s ease-in-out;
+        }
+
+        /* البالونات داخل الظرف - مخفية في البداية */
+        .envelope-content .balloon {
+            position: absolute;
+            opacity: 0;
+            transition: none;
+        }
+
+        /* عند فتح الظرف تظهر البالونات */
+        .envelope-wrapper.open .envelope-content .balloon {
+            opacity: 1;
+        }
+
+        /* ============================================
+           BALLOONS - FLYING OUT FROM ENVELOPE
            ============================================ */
         .balloon {
             position: fixed;
-            z-index: 5;
+            z-index: 501;
             pointer-events: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            opacity: 0;
         }
 
         .balloon-heart {
@@ -187,8 +238,15 @@
             border-radius: 50%;
         }
 
-        .balloon-heart::before { top: -20px; left: 0; }
-        .balloon-heart::after { left: 20px; top: 0; }
+        .balloon-heart::before {
+            top: -20px;
+            left: 0;
+        }
+
+        .balloon-heart::after {
+            left: 20px;
+            top: 0;
+        }
 
         @keyframes balloonSway {
             0%, 100% { transform: rotate(-45deg) translateX(0); }
@@ -209,29 +267,141 @@
             50% { transform: rotate(5deg); }
         }
 
-        @keyframes floatUpFromEnvelope {
+        @keyframes floatUpFromInside {
             0% { 
-                transform: translateY(0) scale(0.5) translateX(var(--drift-start)); 
-                opacity: 0; 
+                opacity: 1;
             }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
             100% { 
-                transform: translateY(-100vh) scale(1.2) translateX(var(--drift-end)); 
+                transform: translateY(-1000px) translateX(var(--drift-x, 0px)) scale(1.2) rotate(var(--drift-rotate, 15deg)); 
                 opacity: 0; 
             }
         }
 
         /* ============================================
-           MESSAGE STYLES
+           FIRST MESSAGE - ELEGANT ANIMATION
+           ============================================ */
+        .first-message-container {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2500;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .first-message-container.visible {
+            opacity: 1;
+        }
+
+        .first-message-container.move-to-top {
+            top: 35% !important;
+        }
+
+        .first-message {
+            position: relative;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.4);
+            width: 280px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 245, 247, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            padding: 35px 25px;
+            border-radius: 30px;
+            box-shadow: 
+                0 20px 60px rgba(255, 77, 109, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .first-message.show {
+            animation: emergeFromInside 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes emergeFromInside {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .first-message:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 
+                0 25px 70px rgba(255, 77, 109, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .message-text {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            line-height: 1.8;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.3px;
+        }
+
+        /* Elegant pulsing circle */
+        .pulse-circle {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 77, 109, 0.6) 0%, rgba(255, 77, 109, 0.2) 70%);
+            animation: elegantPulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .pulse-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-red);
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+        }
+
+        @keyframes elegantPulse {
+            0%, 100% { 
+                transform: translateX(-50%) scale(1);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateX(-50%) scale(1.4);
+                opacity: 1;
+            }
+        }
+
+        /* ============================================
+           OTHER MESSAGES
            ============================================ */
         .message-container {
-            position: absolute;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            z-index: 15;
+            z-index: 150;
             width: 90%;
             max-width: 500px;
         }
@@ -240,130 +410,96 @@
             position: relative;
             text-align: center;
             opacity: 0;
-            transform: scale(0.3) translateY(150px);
+            transform: scale(0.9) translateY(30px);
             display: none;
             width: 100%;
-            background: var(--box-bg);
-            backdrop-filter: blur(15px);
-            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 245, 247, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            padding: 40px 30px;
             border-radius: 30px;
-            box-shadow: var(--shadow);
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 20px 60px rgba(255, 77, 109, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 182, 193, 0.3);
         }
 
         .message-box.active {
             display: block;
-            animation: emergeFromEnvelope 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: fadeInElegant 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes emergeFromEnvelope {
-            0% { opacity: 0; transform: scale(0.3) translateY(150px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* Fixed Title Animation */
-        .message-box#msg1.fixed-top {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) !important;
-            width: 90%;
-            max-width: 500px;
-            margin: 0;
-            z-index: 100;
-            animation: floatToTop 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, gentlePulse 3s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        @keyframes floatToTop {
-            0% { top: 50%; transform: translate(-50%, -50%) scale(1); }
-            100% { top: 20px; transform: translate(-50%, 0) scale(0.9); }
-        }
-
-        @keyframes gentlePulse {
-            0%, 100% { transform: translate(-50%, 0) scale(0.9); box-shadow: var(--shadow); }
-            50% { transform: translate(-50%, -10px) scale(0.92); box-shadow: 0 20px 40px rgba(255, 77, 109, 0.4); }
+        @keyframes fadeInElegant {
+            0% {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
 
         .message-box.fade-out {
-            animation: fadeOutMessage 0.6s forwards;
+            animation: fadeOutElegant 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes fadeOutMessage {
-            0% { opacity: 1; transform: scale(1) translateY(0); }
-            100% { opacity: 0; transform: scale(0.95) translateY(-20px); }
-        }
-
-        .message-text {
-            font-size: 1.6rem;
-            color: var(--text-color);
-            line-height: 1.8;
-            font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.08);
+        @keyframes fadeOutElegant {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.9) translateY(-30px);
+            }
         }
 
         /* ============================================
-           BUTTON STYLES
+           BUTTONS
            ============================================ */
         .btn-container {
             display: none;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
             opacity: 0;
-            width: 100%;
-            z-index: 20;
+            transform: translateY(20px);
+            margin-top: 10px;
         }
 
         .btn-container.active {
             display: flex;
-            opacity: 1;
+            animation: buttonsAppearElegant 0.6s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        #msg1-btns .cute-btn:nth-child(1) {
-            animation: slideInLeft 0.8s 0.4s forwards;
-        }
-        #msg1-btns .cute-btn:nth-child(2) {
-            animation: slideInRight 0.8s 0.6s forwards;
-        }
-
-        @keyframes slideInLeft {
-            0% { opacity: 0; transform: translateX(-50px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInRight {
-            0% { opacity: 0; transform: translateX(50px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-
-        .btn-container.active:not(#msg1-btns) {
-            animation: buttonsAppear 0.8s 0.3s forwards;
-        }
-
-        @keyframes buttonsAppear {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes buttonsAppearElegant {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .cute-btn {
-            background: linear-gradient(135deg, var(--primary-red), #ff758f);
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff4d6d 50%, #e63e5e 100%);
             color: white;
             border: none;
-            padding: 16px 35px;
+            padding: 16px 32px;
             border-radius: 50px;
             font-family: 'Amiri', serif;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.35);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 
+                0 8px 20px rgba(255, 77, 109, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
             font-weight: bold;
             position: relative;
             overflow: hidden;
-            opacity: 0; /* Default hidden for animations */
-        }
-        
-        .btn-container.active:not(#msg1-btns) .cute-btn {
-            opacity: 1;
+            letter-spacing: 0.3px;
         }
 
         .cute-btn::before {
@@ -374,92 +510,101 @@
             width: 0;
             height: 0;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.4);
             transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+            transition: width 0.6s ease, height 0.6s ease;
         }
 
-        .cute-btn:hover::before { width: 300px; height: 300px; }
-        .cute-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 25px rgba(255, 77, 109, 0.45); }
-        .cute-btn:active { transform: translateY(-2px) scale(1.02); }
+        .cute-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cute-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 30px rgba(255, 77, 109, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .cute-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
 
         /* ============================================
-           KISS ANIMATION
+           KISS ANIMATION - استخدام صورة بدلاً من الإيموجي
            ============================================ */
         #kiss-icon {
             position: fixed;
             width: 100vw;
             height: 100vh;
             display: none;
-            z-index: 100;
+            z-index: 3000;
             pointer-events: none;
             left: 0;
             top: 0;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle, rgba(255, 77, 109, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.2) 0%, transparent 70%);
         }
 
         .kiss-image {
-            width: 90vw;
-            height: 90vh;
+            width: 200px;
+            height: 200px;
             object-fit: contain;
-            filter: drop-shadow(0 0 60px rgba(220, 20, 60, 0.6));
+            filter: drop-shadow(0 0 60px rgba(220, 20, 60, 0.7));
         }
 
         .kiss-active {
             display: flex !important;
-            animation: kissZoomInMassive 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: kissZoomInToMax 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes kissZoomInMassive {
-            0% { opacity: 0; transform: scale(0.05) rotate(-30deg); }
-            60% { opacity: 1; transform: scale(1.1) rotate(5deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        @keyframes kissZoomInToMax {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        .kiss-image {
+            animation: kissScale 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes kissScale {
+            0% { transform: scale(0.1) rotate(-30deg); }
+            100% { transform: scale(4) rotate(0deg); }
         }
 
         .lip-mark-trace {
             position: fixed;
             width: 100vw;
             height: 100vh;
-            display: none;
+            display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 99;
+            z-index: 2900;
             pointer-events: none;
             left: 0;
             top: 0;
-            animation: fadeTraceOut 5s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        .lip-mark-trace.show {
+            animation: traceAppearAndFade 3s ease-out forwards;
         }
 
         .lip-mark-trace img {
-            width: 120vw; /* Larger start */
-            height: 120vh;
+            width: 800px;
+            height: 800px;
             object-fit: contain;
-            opacity: 0.8;
-            filter: blur(2px) drop-shadow(0 0 60px rgba(220, 20, 60, 0.6));
-            animation: shrinkBlur 5s forwards;
+            filter: drop-shadow(0 0 50px rgba(220, 20, 60, 0.5));
         }
 
-        @keyframes shrinkBlur {
-            0% { transform: scale(1); filter: blur(2px); }
-            100% { transform: scale(0.8); filter: blur(8px); }
-        }
-
-        @keyframes fadeTraceOut {
+        @keyframes traceAppearAndFade {
             0% { opacity: 0; }
-            10% { opacity: 1; }
-            70% { opacity: 1; }
+            10% { opacity: 0.4; }
+            70% { opacity: 0.4; }
             100% { opacity: 0; }
-        }
-
-        .trace-pulse {
-            animation: traceGlow 2s infinite alternate;
-        }
-
-        @keyframes traceGlow {
-            0% { filter: drop-shadow(0 0 40px rgba(220, 20, 60, 0.4)); }
-            100% { filter: drop-shadow(0 0 80px rgba(220, 20, 60, 0.8)); }
         }
 
         /* ============================================
@@ -473,11 +618,13 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            filter: drop-shadow(0 0 50px rgba(220, 20, 60, 0.8));
+            filter: drop-shadow(0 0 60px rgba(220, 20, 60, 0.9));
             pointer-events: none;
         }
 
-        .beating { animation: heartBeatSync 1.2s infinite; }
+        .beating {
+            animation: heartBeatSync 1.2s infinite;
+        }
 
         @keyframes heartBeatSync {
             0% { transform: translate(-50%, -50%) scale(1); }
@@ -487,11 +634,13 @@
             60% { transform: translate(-50%, -50%) scale(1); }
         }
 
-        .bg-transition { animation: bgPulse 2.5s infinite alternate ease-in-out; }
+        .bg-transition {
+            animation: bgPulse 2.5s infinite alternate ease-in-out;
+        }
 
         @keyframes bgPulse {
-            0% { background-color: var(--white); }
-            100% { background-color: #ffe5ec; }
+            0% { background: linear-gradient(135deg, #fff5f7 0%, #ffe8ec 100%); }
+            100% { background: linear-gradient(135deg, #ffe8ec 0%, #ffd9e0 100%); }
         }
 
         .floating-heart {
@@ -505,9 +654,15 @@
         }
 
         @keyframes floatUpSmooth {
-            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+            0% { 
+                opacity: 0;
+                transform: translateY(0) rotate(0deg); 
+            }
             10% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-100vh) rotate(360deg); }
+            100% { 
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg); 
+            }
         }
 
         .icon-heart {
@@ -525,27 +680,79 @@
         }
 
         @media (max-width: 600px) {
-            .envelope { width: 250px; height: 166px; }
-            .envelope::before { border-top: 83px solid var(--envelope-flap); border-right: 125px solid transparent; border-left: 125px solid transparent; }
-            .envelope::after { border-top: 83px solid transparent; border-right: 125px solid #f8ad9d; border-bottom: 83px solid #f8ad9d; border-left: 125px solid #f8ad9d; }
-            .message-text { font-size: 1.3rem; }
-            .cute-btn { font-size: 1rem; padding: 12px 25px; }
-            .beating-heart-emoji { font-size: 180px; }
+            .envelope-back,
+            .envelope-front {
+                width: 250px;
+                height: 166px;
+            }
+
+            .envelope-front::before {
+                border-top: 83px solid var(--envelope-flap);
+                border-right: 125px solid transparent;
+                border-left: 125px solid transparent;
+            }
+
+            .envelope-front::after {
+                width: 250px;
+                height: 83px;
+            }
+
+            .envelope-content {
+                width: 230px;
+                height: 150px;
+            }
+
+            .first-message {
+                width: 230px;
+                padding: 30px 20px;
+            }
+
+            .message-text {
+                font-size: 1.2rem;
+            }
+
+            .cute-btn {
+                font-size: 1rem;
+                padding: 12px 25px;
+            }
+
+            .kiss-image {
+                width: 150px;
+                height: 150px;
+            }
+
+            .lip-mark-trace img {
+                width: 300px;
+                height: 300px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div id="main-container">
+        <!-- Elegant Envelope -->
         <div class="envelope-wrapper" id="envelope-wrapper" onclick="openEnvelope()">
-            <div class="envelope"></div>
-            <div class="heart-seal"></div>
+            <div class="envelope-back"></div>
+            
+            <div class="envelope-content" id="envelope-content">
+                <!-- البالونات ستُضاف هنا ديناميكياً -->
+            </div>
+            
+            <div class="envelope-front">
+                <div class="heart-seal"></div>
+            </div>
         </div>
 
-        <div class="message-container">
-            <div id="msg1" class="message-box">
+        <!-- الرسالة الأولى - منفصلة تماماً عن الظرف -->
+        <div class="first-message-container" id="first-msg-container">
+            <div class="first-message" id="first-message">
+                <div class="pulse-circle"></div>
                 <div class="message-text">صباح الخير مايتي، شلونك؟</div>
             </div>
+        </div>
+
+        <div class="message-container" id="message-container">
             <div id="msg1-btns" class="btn-container">
                 <button class="cute-btn" onclick="handleBtnClick('msg2')">الحمدلله بخير</button>
                 <button class="cute-btn" onclick="handleBtnClick('msg3')">ازرق و رمادي</button>
@@ -555,7 +762,7 @@
                 <div class="message-text">شووو انا قلت شلونك = شو لونك🙄</div>
             </div>
             <div id="msg2-btns" class="btn-container">
-                <button class="cute-btn" onclick="handleBtnClick('msg1')">عودة</button>
+                <button class="cute-btn" onclick="handleBtnClick('msg3')">أوكي فهمت 😊</button>
             </div>
 
             <div id="msg3" class="message-box">
@@ -594,52 +801,66 @@
         </div>
 
         <div id="kiss-icon">
-            <img class="kiss-image" id="kiss-image" src="" alt="Kiss">
-        </div>
-        <div id="lip-trace" class="lip-mark-trace">
-            <img id="trace-img" src="" alt="Trace">
+            <img src="https://files.catbox.moe/ydd82c.png" alt="Kiss" class="kiss-image">
         </div>
         <div id="beating-heart" class="beating-heart-emoji">🫀</div>
     </div>
 
     <script>
-        const KISS_IMAGE_PATH = "/attached_assets/PhotoRoom-20260213_144501_1770983176662.png";
-        document.getElementById('kiss-image').src = KISS_IMAGE_PATH;
-        document.getElementById('trace-img').src = KISS_IMAGE_PATH;
-
+        /* ============================================
+           SOUND WITH YOUR UPLOADED HEARTBEAT
+           ============================================ */
         const SOUND_CONFIG = {
             clickSound: "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
-            heartbeatSound: "https://assets.mixkit.co/active_storage/sfx/2492/2492-preview.mp3"
+            heartbeatSound: "https://files.catbox.moe/xsfk0h.mp3"
         };
 
         let clickAudio = null;
         let heartbeatAudio = null;
+        let isAudioInitialized = false;
+        let firstMessageClicked = false;
 
         function initAudio() {
-            if (!clickAudio) {
+            if (isAudioInitialized) return;
+            try {
                 clickAudio = new Audio(SOUND_CONFIG.clickSound);
-                clickAudio.volume = 0.15;
+                clickAudio.volume = 0.2;
                 clickAudio.load();
-            }
-            if (!heartbeatAudio) {
+                
                 heartbeatAudio = new Audio(SOUND_CONFIG.heartbeatSound);
-                heartbeatAudio.volume = 0.6;
+                heartbeatAudio.volume = 1.0;
                 heartbeatAudio.load();
+                
+                isAudioInitialized = true;
+                console.log("✓ Audio ready");
+            } catch (e) {
+                console.error("Audio error:", e);
             }
         }
 
         function playClickSound() {
-            initAudio();
-            clickAudio.currentTime = 0;
-            clickAudio.play().catch(() => {});
+            if (!isAudioInitialized) initAudio();
+            if (clickAudio) {
+                clickAudio.currentTime = 0;
+                clickAudio.play().catch(e => console.log("Click:", e.message));
+            }
         }
 
         function playHeartbeatSound() {
-            initAudio();
-            heartbeatAudio.currentTime = 0;
-            heartbeatAudio.play().catch(() => {});
+            if (!isAudioInitialized) initAudio();
+            if (heartbeatAudio) {
+                heartbeatAudio.currentTime = 0;
+                heartbeatAudio.play().then(() => {
+                    console.log("♥ Heartbeat playing");
+                }).catch(e => {
+                    console.log("Heartbeat:", e.message);
+                });
+            }
         }
 
+        /* ============================================
+           ENVELOPE OPENING
+           ============================================ */
         function openEnvelope() {
             playClickSound();
             const wrapper = document.getElementById('envelope-wrapper');
@@ -647,149 +868,280 @@
             
             wrapper.classList.add('open');
             
-            const envelopeRect = wrapper.querySelector('.envelope').getBoundingClientRect();
-            const startX = envelopeRect.left + envelopeRect.width / 2;
-            const startY = envelopeRect.top + envelopeRect.height / 2;
+            // إظهار الرسالة فوراً
+            const firstMsgContainer = document.getElementById('first-msg-container');
+            firstMsgContainer.classList.add('visible');
             
-            // Release 12-15 balloons with stagger
-            const count = 12 + Math.floor(Math.random() * 4);
-            for(let i=0; i<count; i++) {
-                setTimeout(() => {
-                    createHeartBalloonFromEnvelope(startX, startY);
-                }, i * 150);
-            }
-            
+            // إظهار الرسالة بعد قليل
             setTimeout(() => {
-                showMsg('msg1');
-            }, 1000);
+                showFirstMessage();
+            }, 300);
+            
+            // البالونات تطير من داخل الظرف عند الفتح
+            setTimeout(() => {
+                launchBalloonsFromEnvelope();
+            }, 500);
+        }
 
-            // After moveDown completes (2.5s), fix msg1 to top
-            setTimeout(() => {
-                const msg1 = document.getElementById('msg1');
-                msg1.classList.add('fixed-top');
+        function createBalloonsInsideEnvelope() {
+            const envelopeContent = document.getElementById('envelope-content');
+            
+            // إنشاء 12 بالون داخل الظرف
+            for(let i = 0; i < 12; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.setAttribute('data-balloon-id', i);
                 
-                // SHOW BUTTONS - Debugged logic
-                setTimeout(() => {
-                    const msg1Btns = document.getElementById('msg1-btns');
-                    msg1Btns.style.display = 'flex';
-                    msg1Btns.classList.add('active');
-                    console.log("Buttons triggered");
-                }, 1200);
-            }, 3000);
+                const heart = document.createElement('div');
+                heart.className = 'balloon-heart';
+                
+                const string = document.createElement('div');
+                string.className = 'balloon-string';
+                
+                balloon.appendChild(heart);
+                balloon.appendChild(string);
+                
+                // وضع البالونات بشكل عشوائي داخل الظرف
+                const randomX = (Math.random() - 0.5) * 200; // -100 to 100
+                const randomY = (Math.random() - 0.5) * 120; // -60 to 60
+                
+                balloon.style.left = `calc(50% + ${randomX}px)`;
+                balloon.style.top = `calc(50% + ${randomY}px)`;
+                balloon.style.transform = 'translate(-50%, -50%) scale(0.6)';
+                
+                // ألوان متنوعة
+                const colors = ['#dc143c', '#ff1744', '#f06292', '#e91e63', '#ff4d6d', '#ff6b9d'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.background = randomColor;
+                
+                envelopeContent.appendChild(balloon);
+            }
         }
 
-        function createHeartBalloonFromEnvelope(startX, startY) {
-            const balloon = document.createElement('div');
-            balloon.className = 'balloon';
+        function launchBalloonsFromEnvelope() {
+            const balloons = document.querySelectorAll('.envelope-content .balloon');
             
-            const driftStart = (Math.random() - 0.5) * 40;
-            const driftEnd = (Math.random() - 0.5) * 200;
-            
-            balloon.style.setProperty('--drift-start', `${driftStart}px`);
-            balloon.style.setProperty('--drift-end', `${driftEnd}px`);
-            balloon.style.left = `${startX - 20}px`;
-            balloon.style.top = `${startY - 18}px`;
-            
-            balloon.innerHTML = `
-                <div class="balloon-heart"></div>
-                <div class="balloon-string"></div>
-            `;
-            
-            document.body.appendChild(balloon);
-            balloon.style.animation = `floatUpFromEnvelope ${3 + Math.random() * 2}s ease-in forwards`;
-            
-            setTimeout(() => balloon.remove(), 5000);
+            balloons.forEach((balloon, index) => {
+                setTimeout(() => {
+                    // الحصول على الموقع الحالي للبالون
+                    const rect = balloon.getBoundingClientRect();
+                    
+                    // تحويل البالون إلى fixed position
+                    balloon.style.position = 'fixed';
+                    balloon.style.left = rect.left + 'px';
+                    balloon.style.top = rect.top + 'px';
+                    balloon.style.transform = 'translate(0, 0) scale(0.6)';
+                    
+                    // نقل البالون إلى body
+                    document.body.appendChild(balloon);
+                    
+                    // حركة الطيران مع الانجراف
+                    const driftX = (Math.random() - 0.5) * 600;
+                    const driftRotate = (Math.random() - 0.5) * 80;
+                    const duration = 5 + Math.random() * 3;
+                    
+                    balloon.style.setProperty('--drift-x', driftX + 'px');
+                    balloon.style.setProperty('--drift-rotate', driftRotate + 'deg');
+                    
+                    // بدء الأنيميشن
+                    requestAnimationFrame(() => {
+                        balloon.style.animation = `floatUpFromInside ${duration}s cubic-bezier(0.4, 0, 0.2, 1) forwards`;
+                    });
+                    
+                    // إزالة البالون بعد انتهاء الأنيميشن
+                    setTimeout(() => balloon.remove(), (duration + 1) * 1000);
+                }, index * 100); // تأخير تدريجي بين كل بالون
+            });
         }
 
-        function showMsg(msgId) {
-            const currentMsgBox = document.querySelector('.message-box.active');
-            const currentBtns = document.querySelector('.btn-container.active');
+        // إنشاء البالونات عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            createBalloonsInsideEnvelope();
+        });
+
+        /* ============================================
+           FIRST MESSAGE - ELEGANT FLOAT UP
+           ============================================ */
+        function showFirstMessage() {
+            const firstMsg = document.getElementById('first-message');
+            const container = document.getElementById('first-msg-container');
+            firstMsg.classList.add('show');
             
-            // Don't hide msg1 as it's the fixed header
-            if (currentMsgBox && currentMsgBox.id !== 'msg1') {
-                currentMsgBox.classList.remove('active');
-                currentMsgBox.classList.add('fade-out');
+            firstMsg.addEventListener('click', function onClick() {
+                if (firstMessageClicked) return;
+                firstMessageClicked = true;
+                
+                playClickSound();
+                
+                const pulse = firstMsg.querySelector('.pulse-circle');
+                if (pulse) pulse.style.display = 'none';
+                
+                firstMsg.style.cursor = 'default';
+                
+                // تحريك الرسالة للأعلى
+                container.classList.add('move-to-top');
+                
+                // إخفاء الظرف
+                const wrapper = document.getElementById('envelope-wrapper');
+                wrapper.style.transition = 'all 0.6s ease-in-out';
+                wrapper.style.opacity = '0';
+                wrapper.style.transform = 'translateY(100px)';
+                
                 setTimeout(() => {
-                    currentMsgBox.classList.remove('fade-out');
-                    currentMsgBox.style.display = 'none';
+                    wrapper.style.display = 'none';
                 }, 600);
+                
+                // إظهار الأزرار
+                setTimeout(() => {
+                    const btns = document.getElementById('msg1-btns');
+                    const msgContainer = document.getElementById('message-container');
+                    msgContainer.appendChild(btns);
+                    btns.style.display = 'flex';
+                    btns.classList.add('active');
+                }, 1000);
+                
+                firstMsg.removeEventListener('click', onClick);
+            });
+        }
+
+        /* ============================================
+           MESSAGE NAVIGATION
+           ============================================ */
+        function showMsg(id) {
+            const firstMsg = document.getElementById('first-message');
+            const firstContainer = document.getElementById('first-msg-container');
+            if (firstMsg && firstContainer) {
+                firstMsg.style.display = 'none';
+                firstContainer.style.display = 'none';
             }
             
-            if (currentBtns) {
-                currentBtns.classList.remove('active');
+            const allBtns = document.querySelectorAll('.btn-container');
+            allBtns.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.display = 'none';
+            });
+            
+            const currentActive = document.querySelector('.message-box.active');
+            if (currentActive) {
+                currentActive.classList.add('fade-out');
                 setTimeout(() => {
-                    currentBtns.style.display = 'none';
-                }, 600);
+                    currentActive.classList.remove('active', 'fade-out');
+                    currentActive.style.display = 'none';
+                    displayMessage(id);
+                }, 500);
+            } else {
+                displayMessage(id);
             }
-            
-            const nextBox = document.getElementById(msgId);
-            const nextBtns = document.getElementById(msgId + '-btns');
-            
-            setTimeout(() => {
-                if (nextBox) {
-                    nextBox.style.display = 'block';
-                    nextBox.classList.add('active');
-                }
-                if (nextBtns) {
-                    nextBtns.style.display = 'flex';
-                    nextBtns.classList.add('active');
-                }
-            }, 650);
         }
 
-        function handleBtnClick(nextMsgId) {
-            showMsg(nextMsgId);
+        function displayMessage(id) {
+            const target = document.getElementById(id);
+            const btns = document.getElementById(id + '-btns');
+            
+            if (target) {
+                target.style.display = 'block';
+                target.offsetHeight;
+                target.classList.add('active');
+            }
+            
+            if (btns) {
+                btns.style.display = 'flex';
+                setTimeout(() => btns.classList.add('active'), 400);
+            }
+        }
+
+        function handleBtnClick(nextId) {
+            playClickSound();
+            showMsg(nextId);
         }
 
         function handleForgivenessClick() {
-            const kissIcon = document.getElementById('kiss-icon');
-            const lipTrace = document.getElementById('lip-trace');
-            
-            kissIcon.classList.add('kiss-active');
-            
-            // Show trace immediately as it zooms
-            setTimeout(() => {
-                lipTrace.style.display = 'flex';
-                lipTrace.classList.add('trace-pulse');
-            }, 100);
-
-            setTimeout(() => {
-                kissIcon.classList.remove('kiss-active');
-                showMsg('msg6');
-            }, 2500);
-
-            // Let trace linger longer
-            setTimeout(() => {
-                lipTrace.style.display = 'none';
-                lipTrace.classList.remove('trace-pulse');
-            }, 6000);
+            playClickSound();
+            handleForgiveness();
         }
 
         function handleFinalSceneClick() {
-            const heart = document.getElementById('beating-heart');
-            heart.style.display = 'block';
-            heart.classList.add('beating');
-            document.body.classList.add('bg-transition');
+            playClickSound();
+            startFinalScene();
+        }
+
+        function handleForgiveness() {
+            const kiss = document.getElementById('kiss-icon');
+            kiss.classList.add('kiss-active');
             
-            setInterval(playHeartbeatSound, 1200);
-            
+            // إظهار أثر القبلة عند وصول القبلة للحجم الأقصى (بعد 2.2 ثانية)
+            setTimeout(() => {
+                const trace = document.createElement('div');
+                trace.className = 'lip-mark-trace show';
+                const img = document.createElement('img');
+                img.src = 'https://files.catbox.moe/ydd82c.png';
+                trace.appendChild(img);
+                document.body.appendChild(trace);
+                
+                // إزالة الأثر بعد 3 ثواني
+                setTimeout(() => trace.remove(), 3000);
+            }, 2200);
+
+            // إخفاء القبلة والانتقال للرسالة التالية
+            setTimeout(() => {
+                kiss.classList.remove('kiss-active');
+                kiss.style.display = 'none';
+                showMsg('msg6');
+            }, 5500); // 2.2 + 3 = 5.2 ثانية تقريباً
+        }
+
+        let heartbeatInterval;
+
+        function startFinalScene() {
             showMsg('msg7');
             
-            setInterval(() => {
-                createFloatingHeart();
-            }, 300);
+            setTimeout(() => {
+                const heartbeat = document.getElementById('beating-heart');
+                heartbeat.style.display = 'block';
+                heartbeat.classList.add('beating');
+                document.body.classList.add('bg-transition');
+                
+                if (!isAudioInitialized) initAudio();
+                
+                setTimeout(() => {
+                    playHeartbeatSound();
+                    heartbeatInterval = setInterval(() => {
+                        playHeartbeatSound();
+                    }, 1200);
+                }, 200);
+                
+                setInterval(() => createFloatingHeart(), 250);
+            }, 1500);
         }
 
         function createFloatingHeart() {
-            const heart = document.createElement('i');
-            heart.className = 'fas fa-heart floating-heart';
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = '<i class="fas fa-heart"></i>';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '100vh';
-            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
-            heart.style.opacity = Math.random();
+            heart.style.bottom = '-50px';
+            heart.style.fontSize = (Math.random() * 30 + 18) + 'px';
+            
+            const colors = ['#ff4d6d', '#ff6b9d', '#ff1744', '#f06292', '#dc143c', '#ff8fa3'];
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 5000);
         }
+
+        window.addEventListener('beforeunload', () => {
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+        });
+
+        let userInteracted = false;
+        ['click', 'touchstart'].forEach(event => {
+            document.addEventListener(event, () => {
+                if (!userInteracted) {
+                    initAudio();
+                    userInteracted = true;
+                }
+            }, { once: true });
+        });
     </script>
 </body>
 </html>
