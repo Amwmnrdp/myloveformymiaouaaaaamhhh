@@ -55,16 +55,18 @@
             background: #f08080;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             border-radius: 0 0 10px 10px;
+            z-index: 1;
         }
 
         .envelope::before {
             content: '';
             position: absolute;
-            z-index: 2;
+            z-index: 3;
             border-top: 100px solid #f4978e;
             border-right: 150px solid transparent;
             border-left: 150px solid transparent;
             top: 0;
+            left: 0;
             transform-origin: top;
             transition: all 0.5s 0.1s ease-in-out;
         }
@@ -72,7 +74,7 @@
         .envelope::after {
             content: '';
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             width: 0;
             height: 0;
             border-top: 100px solid transparent;
@@ -80,12 +82,13 @@
             border-bottom: 100px solid #f8ad9d;
             border-left: 150px solid #f8ad9d;
             bottom: 0;
+            left: 0;
             border-radius: 0 0 10px 10px;
         }
 
         .heart-seal {
             position: absolute;
-            top: 50%;
+            top: 50px; /* Positioned on the flap */
             left: 50%;
             width: 50px;
             height: 50px;
@@ -94,7 +97,7 @@
             transform: translate(-50%, -50%) rotate(-45deg);
             box-shadow: 0 1px 6px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.5s 0.1s ease-in-out;
         }
 
         .heart-seal::before, .heart-seal::after {
@@ -111,7 +114,10 @@
 
         .envelope-wrapper.open .envelope::before {
             transform: rotateX(180deg);
-            z-index: 0;
+        }
+
+        .envelope-wrapper.open .heart-seal {
+            transform: translate(-50%, -150px) rotate(-45deg) rotateX(180deg);
         }
 
         .envelope-wrapper.open {
@@ -122,6 +128,32 @@
             0% { transform: translateY(0); opacity: 1; }
             40% { transform: translateY(-150px); opacity: 1; }
             100% { transform: translateY(400px); opacity: 0; pointer-events: none; }
+        }
+
+        /* Balloon Hearts */
+        .balloon {
+            position: absolute;
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .balloon-heart {
+            font-size: 24px;
+            color: var(--primary-red);
+        }
+
+        .balloon-string {
+            width: 1px;
+            height: 30px;
+            background: black;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-600px) scale(1.2); opacity: 0; }
         }
 
         /* Message Styles */
@@ -228,28 +260,20 @@
         @keyframes kissZoomIn {
             0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
             40% { transform: translate(-50%, -50%) scale(4); opacity: 1; }
-            70% { transform: translate(-50%, -50%) scale(3.5); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(4); opacity: 1; }
         }
 
         .lip-mark-trace {
             position: absolute;
             width: 300px;
             height: 300px;
-            background-image: url('/assets/kiss.webp');
+            background-image: url('/kiss.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.3;
+            opacity: 1;
             z-index: 99;
             pointer-events: none;
-            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); /* Half lip effect */
-            animation: lipFadeOutFast 2s forwards;
-        }
-
-        @keyframes lipFadeOutFast {
-            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(3.5); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(3.6); }
         }
 
         /* Final Scene Heart */
@@ -371,7 +395,7 @@
             </div>
         </div>
 
-        <img id="kiss-icon" src="/assets/kiss.webp" alt="Kiss">
+        <img id="kiss-icon" src="/kiss.png" alt="Kiss">
         <div id="beating-heart" class="beating-heart-emoji">🫀</div>
     </div>
 
@@ -384,12 +408,18 @@
     </audio>
 
     <script>
-        // Sound URLs from Pixabay (high quality direct links found via pattern matching common direct link structures)
-        const CLICK_SOUND_URL = "https://cdn.pixabay.com/audio/2022/03/15/audio_7314787a71.mp3"; // Pop sound
-        const HEARTBEAT_SOUND_URL = "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a1e3f3.mp3"; // Heartbeat
+        // --- CUSTOMIZABLE SOUND LINKS ---
+        // Change these URLs if you want to use different sounds
+        const CLICK_SOUND_SRC = "https://cdn.pixabay.com/audio/2022/03/15/audio_7314787a71.mp3"; 
+        const HEARTBEAT_SOUND_SRC = "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a1e3f3.mp3";
+        // -------------------------------
         
         const clickAudio = document.getElementById('click-sound');
         const heartbeatAudio = document.getElementById('heartbeat-sound');
+        
+        // Initialize sources
+        clickAudio.src = CLICK_SOUND_SRC;
+        heartbeatAudio.src = HEARTBEAT_SOUND_SRC;
         
         function playClickSound() {
             clickAudio.currentTime = 0;
@@ -411,7 +441,7 @@
             for(let i=0; i<25; i++) {
                 setTimeout(() => {
                     createBalloon();
-                }, i * 80);
+                }, i * 150);
             }
 
             setTimeout(() => {
@@ -420,18 +450,20 @@
         }
 
         function createBalloon() {
-            const balloon = document.createElement('div');
-            balloon.className = 'balloon';
-            balloon.innerHTML = '❤️';
+            const balloonContainer = document.createElement('div');
+            balloonContainer.className = 'balloon';
+            balloonContainer.innerHTML = '<div class="balloon-heart">❤️</div><div class="balloon-string"></div>';
+            
             const container = document.getElementById('main-container');
             const rect = container.getBoundingClientRect();
             
-            balloon.style.left = (rect.width / 2 - 20 + (Math.random() * 60 - 30)) + 'px';
-            balloon.style.top = (rect.height / 2) + 'px';
-            balloon.style.animation = `floatUp ${2.5 + Math.random() * 2}s ease-in forwards`;
+            const randomOffset = (Math.random() * 200 - 100);
+            balloonContainer.style.left = (rect.width / 2 + randomOffset) + 'px';
+            balloonContainer.style.top = (rect.height / 2 + 50) + 'px';
+            balloonContainer.style.animation = `floatUp ${4 + Math.random() * 2}s ease-in forwards`;
             
-            container.appendChild(balloon);
-            setTimeout(() => balloon.remove(), 4500);
+            container.appendChild(balloonContainer);
+            setTimeout(() => balloonContainer.remove(), 6000);
         }
 
         function showMsg(id) {
@@ -499,16 +531,16 @@
                 trace.className = 'lip-mark-trace';
                 trace.style.left = '50%';
                 trace.style.top = '50%';
-                trace.style.transform = 'translate(-50%, -50%)';
+                trace.style.transform = 'translate(-50%, -50%) scale(4)';
                 document.getElementById('main-container').appendChild(trace);
                 
-                setTimeout(() => trace.remove(), 2000); // 2 seconds
+                // Kiss mark stays visible
             }, 1000);
 
             setTimeout(() => {
                 kiss.classList.remove('kiss-active');
                 showMsg('msg6');
-            }, 2000);
+            }, 2500);
         }
 
         function startFinalScene() {
